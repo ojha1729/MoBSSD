@@ -2,13 +2,23 @@
 % Please edit documentation in R/load_dataset.R
 \name{load_dataset}
 \alias{load_dataset}
-\title{Title}
+\title{Read Dataset}
 \usage{
 load_dataset(path_to_file = NULL, file_name)
 }
 \arguments{
-\item{file_name}{}
+\item{path_to_file}{path to the folder where transcripts coordinates file is saved}
+
+\item{file_name}{name of the file (passed as string)}
+}
+\value{
+A csv file with coordinates of each transcript.
+The 'inNucleus' column is updated.
+It is changed to 0 for all the transcripts outside the nucleus (inNucleus = 0 in original file) and 1 for the trasncripts inside nucleus (inNucleus =1 in original file).
 }
 \description{
-Title
+A function that reads dataset and modifies the 'inNucleus' column.
+It is expected that coordinates are named as 'x' and 'y'.
+Column name for genes must be 'gene'.
+Column that contains distance from the nuclear membrane must be named 'inNucleus'.
 }

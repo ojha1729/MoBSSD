@@ -7,7 +7,10 @@
 nucleus_marker(group)
 }
 \arguments{
-\item{group}{}
+\item{group}{A dataframe of coordinates of a cell with distance from nuclear membrane column named as "inNucleus"}
+}
+\value{
+Returns 0 if bins are inside
 }
 \description{
 Title

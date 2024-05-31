@@ -1,8 +1,8 @@
 #' Title
 #'
-#' @param group
+#' @param group A dataframe of coordinates of a cell with distance from nuclear membrane column named as "inNucleus"
 #'
-#' @return
+#' @return Returns 0 if bins are inside
 #' @export
 #'
 #' @examples
@@ -34,16 +34,20 @@ center_calc_v <- function(column){
 }
 
 
+
 #' Title
 #'
 #' @param group
+#' @param gene_names_all
 #'
 #' @return
 #' @export
 #'
 #' @examples
-gene_dummy <- function(group){
-  count_df = group %>% dplyr::group_by(gene) %>% dplyr::summarise(count = n()) %>% dplyr::arrange(by = gene)
+#' @importFrom magrittr %>%
+gene_dummy <- function(group, gene_names_all){
+  gene <- NULL
+  count_df = group %>% dplyr::group_by(gene) %>% dplyr::summarise(count = dplyr::n()) %>% dplyr::arrange(by = gene)
   dummy_vec = data.table::data.table(gene = sort(gene_names_all),count = rep(0,length(gene_names_all)))
   gene_names = group$gene
   dummy_vec[which(dummy_vec$gene %in% gene_names),"count"] = count_df$count
@@ -53,18 +57,20 @@ gene_dummy <- function(group){
   return(vec)
 }
 
+
 #' Title
 #'
 #' @param cell
 #' @param binsize
+#' @param all_genes
 #'
-#' @importFrom magrittr %>%
 #' @return
 #' @export
 #'
 #' @examples
-cell_bins <- function(cell,binsize){
-
+#' @importFrom magrittr %>%
+cell_bins <- function(cell,binsize,all_genes){
+  x <- y <- uID <- cut_x <- cut_y <- . <- NULL
   xmin=  min(cell$x)
   xmax = max(cell$x)
   ymin = min(cell$y)
@@ -73,10 +79,10 @@ cell_bins <- function(cell,binsize){
   cell = cell %>% dplyr::mutate(cut_x = cut(x, breaks = seq(xmin-binsize,xmax+binsize,by = binsize),dig.lab = 9),
                          cut_y = cut(y, breaks = seq(ymin-binsize,ymax+binsize,by = binsize),dig.lab = 9))
 
-  cell2 = cell %>% dplyr::group_by(uID,cut_x,cut_y) %>% foreach::do(data.table(nucleus = nucleus_marker(.),
-                                                               gene = gene_dummy(.))) %>% dplyr::ungroup()
-  cell3 = cell2 %>% dplyr::mutate(center_x = center_calc_v(cut_x)) %>%
-    dplyr::mutate(center_y = center_calc_v(cut_y)) %>%
+  cell2 = cell %>% dplyr::group_by(uID,cut_x,cut_y) %>% foreach::do(data.table::data.table(nucleus = nucleus_marker(.),
+                                                               gene = gene_dummy(., gene_names_all = all_genes))) %>% dplyr::ungroup()
+  cell3 = cell2 %>% dplyr::mutate(node_center_x = center_calc_v(cut_x)) %>%
+    dplyr::mutate(node_center_y = center_calc_v(cut_y)) %>%
     dplyr::select(!c("cut_x","cut_y"))
   return(cell3)
 }

@@ -4,10 +4,10 @@
 \alias{gene_dummy}
 \title{Title}
 \usage{
-gene_dummy(group)
+gene_dummy(group, gene_names_all)
 }
 \arguments{
-\item{group}{}
+\item{gene_names_all}{}
 }
 \description{
 Title

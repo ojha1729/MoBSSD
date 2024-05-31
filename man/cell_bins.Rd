@@ -4,10 +4,10 @@
 \alias{cell_bins}
 \title{Title}
 \usage{
-cell_bins(cell, binsize)
+cell_bins(cell, binsize, all_genes)
 }
 \arguments{
-\item{binsize}{}
+\item{all_genes}{}
 }
 \description{
 Title
